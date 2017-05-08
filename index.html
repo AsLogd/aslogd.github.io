@@ -25,9 +25,20 @@
 <body>
   <header>
     <img src="assets/img/logo.png"/>
+    <nav>
+      <ul>
+        <li data-bind-view="home">
+          <a href="#/home">Home</a>
+        </li>
+        <li data-bind-view="team">
+          <a href="#/team">The team</a>
+        </li>
+      </ul>
+    </nav>
   </header>
   <main>
-    <article id="landing">
+  <!-- Home view -->
+    <article id="home" class="view">
       <div id="firstLine" class="line"></div>
       <div class="circle first hasOuterLines">
         <h1>Imagine...</h1>
@@ -58,11 +69,13 @@ visit anywhere.
       <div class="circle fourth">
         <h2>Travel is inconvenient and uncomfortable.</h2>
         <pre>
-Roads and cities are congested, 
-current travel experience is 
-contemptible, air pollution is 
-drastically harming human and 
-environmental health.
+Roads and cities are 
+congested, current travel 
+experience is contemptible, 
+air pollution is drastically 
+harming human and 
+environmental 
+health.
         </pre>
       </div>
       <div class="circle fifth">
@@ -100,11 +113,15 @@ it a reality
             <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_131680a7fd56be89b79329f9b_69fc70f978" tabindex="-1" value=""></div>
           </form>
         </div>
-        <p>Get in the loop:</p>
+        <p>Ready to change the world?</p>
         <a target="_blank" class="join button" href="http://bit.ly/joinrLoop">
           Join the rLoop team
         </a>
       </div>    
+    </article>
+    <!-- Team view -->
+    <article id="team" class="view">
+      <h1>Team page</h1>
     </article>
   </main>
   <footer>
@@ -128,10 +145,10 @@ it a reality
         <a target="_blank" href="https://www.reddit.com/r/rLoop">
           <i class="fa fa-reddit-alien fa-lg"></i>
         </a>
-        <a target="_blank" href="www.instagram.com/rloopteam">
+        <a target="_blank" href="https://www.instagram.com/rloopteam">
           <i class="fa fa-instagram fa-lg"></i>
         </a>
-        <a target="_blank" href="www.linkedin.com/company/rloop-incorporated">
+        <a target="_blank" href="https://www.linkedin.com/company/rloop-incorporated">
           <i class="fa fa-linkedin fa-lg"></i>
         </a>
     </div>
