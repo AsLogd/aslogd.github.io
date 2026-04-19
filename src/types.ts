@@ -56,7 +56,7 @@ export interface ResolutionStep {
   trigger: Trigger;
 }
 
-export const ROWS = 3;
+export const ROWS = 4;
 export const COLS = 4;
 
 export type Board = (PlacedCard | null)[][];

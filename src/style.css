@@ -177,9 +177,9 @@ body {
 .board {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-rows: repeat(4, 1fr);
   gap: 6px;
-  min-height: 360px;
+  min-height: 480px;
 }
 
 .arrow-overlay {

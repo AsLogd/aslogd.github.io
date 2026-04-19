@@ -100,6 +100,43 @@ const p1Architect: CardDefinition = {
   ],
 };
 
+// T1: South threat — companion to Intern, covers vertical lane
+const p1Rookie: CardDefinition = {
+  id: 'p1-rookie',
+  name: 'The Rookie',
+  tier: 1,
+  arrows: [{ direction: 'S', color: 'red' }],
+  effects: [{ type: 'push', magnitude: 2, color: 'red', trigger: 'onTargetAcquired' }],
+};
+
+// T2: Upward diagonal burst — mirror of Hustler, hits cards already above
+const p1Enforcer: CardDefinition = {
+  id: 'p1-enforcer',
+  name: 'The Enforcer',
+  tier: 2,
+  arrows: [
+    { direction: 'NW', color: 'red' },
+    { direction: 'NE', color: 'red' },
+  ],
+  effects: [{ type: 'push', magnitude: 2, color: 'red', trigger: 'onPlay' }],
+};
+
+// T3: Horizontal sweep — enemy-only pressure across a row
+const p1Director: CardDefinition = {
+  id: 'p1-director',
+  name: 'The Director',
+  tier: 3,
+  arrows: [
+    { direction: 'W', color: 'red' },
+    { direction: 'N', color: 'red' },
+    { direction: 'E', color: 'red' },
+  ],
+  effects: [{
+    type: 'push', magnitude: 2, color: 'red', trigger: 'onTargetAcquired',
+    filter: { team: 'enemy' },
+  }],
+};
+
 // =============================================================
 // PLAYER 2 DECK
 // =============================================================
@@ -206,12 +243,50 @@ const p2VP: CardDefinition = {
   ],
 };
 
+// T1: South pull — scrubs rukas off cards below
+const p2Clerk: CardDefinition = {
+  id: 'p2-clerk',
+  name: 'The Clerk',
+  tier: 1,
+  arrows: [{ direction: 'S', color: 'blue' }],
+  effects: [{ type: 'pull', magnitude: 2, color: 'blue', trigger: 'onTargetAcquired' }],
+};
+
+// T2: Diagonal pull — reactive across opposite corners
+const p2Analyst: CardDefinition = {
+  id: 'p2-analyst',
+  name: 'The Analyst',
+  tier: 2,
+  arrows: [
+    { direction: 'NE', color: 'blue' },
+    { direction: 'SW', color: 'blue' },
+  ],
+  effects: [{ type: 'pull', magnitude: 2, color: 'blue', trigger: 'onTargetAcquired' }],
+};
+
+// T3: Persistent ally support — quietly cleans rukas off allies each round
+const p2Coach: CardDefinition = {
+  id: 'p2-coach',
+  name: 'The Coach',
+  tier: 3,
+  arrows: [
+    { direction: 'N', color: 'blue' },
+    { direction: 'S', color: 'blue' },
+  ],
+  effects: [{
+    type: 'pull', magnitude: 1, color: 'blue', trigger: 'eachTurn',
+    filter: { team: 'ally' },
+  }],
+};
+
 // --- Decks ---
 
 export const PLAYER1_DECK: CardDefinition[] = [
-  p1Intern, p1Helper, p1Delegator, p1Hustler, p1ScrumMaster, p1Lead, p1Architect,
+  p1Intern, p1Helper, p1Rookie, p1Delegator, p1Hustler, p1Enforcer,
+  p1ScrumMaster, p1Lead, p1Director, p1Architect,
 ];
 
 export const PLAYER2_DECK: CardDefinition[] = [
-  p2Intern, p2Shadow, p2Mediator, p2Mentor, p2Firefighter, p2Manager, p2VP,
+  p2Intern, p2Shadow, p2Clerk, p2Mediator, p2Mentor, p2Analyst,
+  p2Firefighter, p2Manager, p2Coach, p2VP,
 ];
