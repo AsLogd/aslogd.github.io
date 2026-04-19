@@ -54,6 +54,30 @@ function resolveEffect(
   effect: Effect,
   effectIdx: number,
 ) {
+  if (effect.target === 'self') {
+    let rukasChange = 0;
+    switch (effect.type) {
+      case 'push':
+        source.rukas += effect.magnitude;
+        rukasChange = effect.magnitude;
+        break;
+      case 'pull': {
+        const pulled = Math.min(source.rukas, effect.magnitude);
+        source.rukas -= pulled;
+        rukasChange = -pulled;
+        break;
+      }
+    }
+    ctx.steps.push({
+      source: source.position,
+      target: source.position,
+      effectType: effect.type,
+      rukasChange,
+      trigger: effect.trigger,
+    });
+    return;
+  }
+
   const arrows = source.definition.arrows
     .filter(a => a.color === effect.color)
     .sort((a, b) => CLOCKWISE_ORDER.indexOf(a.direction) - CLOCKWISE_ORDER.indexOf(b.direction));
@@ -290,6 +314,16 @@ export function getEachTurnPreview(state: GameState): ResolutionStep[] {
       if (!card) continue;
       for (const effect of card.definition.effects) {
         if (effect.trigger !== 'eachTurn') continue;
+        if (effect.target === 'self') {
+          steps.push({
+            source: card.position,
+            target: card.position,
+            effectType: effect.type,
+            rukasChange: effect.type === 'push' ? effect.magnitude : -Math.min(card.rukas, effect.magnitude),
+            trigger: 'eachTurn',
+          });
+          continue;
+        }
         const arrows = card.definition.arrows
           .filter(a => a.color === effect.color)
           .sort((a, b) => CLOCKWISE_ORDER.indexOf(a.direction) - CLOCKWISE_ORDER.indexOf(b.direction));

@@ -13,7 +13,7 @@ const p1Intern: CardDefinition = {
   name: 'The Intern',
   tier: 1,
   arrows: [{ direction: 'E', color: 'red' }],
-  effects: [{ type: 'push', magnitude: 2, color: 'red', trigger: 'onTargetAcquired' }],
+  effects: [{ type: 'push', magnitude: 3, color: 'red', trigger: 'onTargetAcquired' }],
 };
 
 // T1: Downward pull — P1's only pull card, defensive option
@@ -22,7 +22,7 @@ const p1Helper: CardDefinition = {
   name: 'The Helper',
   tier: 1,
   arrows: [{ direction: 'S', color: 'blue' }],
-  effects: [{ type: 'pull', magnitude: 2, color: 'blue', trigger: 'onTargetAcquired' }],
+  effects: [{ type: 'pull', magnitude: 3, color: 'blue', trigger: 'onTargetAcquired' }],
 };
 
 // T2: Vertical spread, plants threats above and below
@@ -34,7 +34,7 @@ const p1Delegator: CardDefinition = {
     { direction: 'N', color: 'red' },
     { direction: 'S', color: 'red' },
   ],
-  effects: [{ type: 'push', magnitude: 1, color: 'red', trigger: 'onTargetAcquired' }],
+  effects: [{ type: 'push', magnitude: 2, color: 'red', trigger: 'onTargetAcquired' }],
 };
 
 // T2: Immediate diagonal burst, unfiltered — risky near allies
@@ -46,7 +46,7 @@ const p1Hustler: CardDefinition = {
     { direction: 'NE', color: 'red' },
     { direction: 'SE', color: 'red' },
   ],
-  effects: [{ type: 'push', magnitude: 2, color: 'red', trigger: 'onPlay' }],
+  effects: [{ type: 'push', magnitude: 3, color: 'red', trigger: 'onPlay' }],
 };
 
 // T3: Persistent area denial, pushes enemies every round
@@ -59,10 +59,13 @@ const p1ScrumMaster: CardDefinition = {
     { direction: 'W', color: 'red' },
     { direction: 'E', color: 'red' },
   ],
-  effects: [{
-    type: 'push', magnitude: 1, color: 'red', trigger: 'eachTurn',
-    filter: { team: 'enemy' },
-  }],
+  effects: [
+    {
+      type: 'push', magnitude: 1, color: 'red', trigger: 'eachTurn',
+      filter: { team: 'enemy' },
+    },
+    { type: 'push', magnitude: 1, color: 'red', trigger: 'eachTurn', target: 'self' },
+  ],
 };
 
 // T3: East-facing wall of threats, enemies only so safe near allies
@@ -81,7 +84,7 @@ const p1Lead: CardDefinition = {
   }],
 };
 
-// T4: onTargetAcquired push + onHit retaliation — "don't feed me" zone
+// T4: Wide cardinal zone — light but spread; onHit keeps bite
 const p1Architect: CardDefinition = {
   id: 'p1-architect',
   name: 'The Architect',
@@ -90,10 +93,11 @@ const p1Architect: CardDefinition = {
     { direction: 'N', color: 'red' },
     { direction: 'E', color: 'red' },
     { direction: 'S', color: 'red' },
+    { direction: 'W', color: 'red' },
   ],
   effects: [
     {
-      type: 'push', magnitude: 2, color: 'red', trigger: 'onTargetAcquired',
+      type: 'push', magnitude: 1, color: 'red', trigger: 'onTargetAcquired',
       filter: { team: 'enemy' },
     },
     { type: 'push', magnitude: 1, color: 'red', trigger: 'onHit' },
@@ -106,7 +110,7 @@ const p1Rookie: CardDefinition = {
   name: 'The Rookie',
   tier: 1,
   arrows: [{ direction: 'S', color: 'red' }],
-  effects: [{ type: 'push', magnitude: 2, color: 'red', trigger: 'onTargetAcquired' }],
+  effects: [{ type: 'push', magnitude: 3, color: 'red', trigger: 'onTargetAcquired' }],
 };
 
 // T2: Upward diagonal burst — mirror of Hustler, hits cards already above
@@ -118,7 +122,7 @@ const p1Enforcer: CardDefinition = {
     { direction: 'NW', color: 'red' },
     { direction: 'NE', color: 'red' },
   ],
-  effects: [{ type: 'push', magnitude: 2, color: 'red', trigger: 'onPlay' }],
+  effects: [{ type: 'push', magnitude: 3, color: 'red', trigger: 'onPlay' }],
 };
 
 // T3: Horizontal sweep — enemy-only pressure across a row
@@ -147,7 +151,7 @@ const p2Intern: CardDefinition = {
   name: 'The Intern',
   tier: 1,
   arrows: [{ direction: 'W', color: 'red' }],
-  effects: [{ type: 'push', magnitude: 2, color: 'red', trigger: 'onTargetAcquired' }],
+  effects: [{ type: 'push', magnitude: 3, color: 'red', trigger: 'onTargetAcquired' }],
 };
 
 // T1: Upward pull — cleans rukas off cards above
@@ -156,7 +160,7 @@ const p2Shadow: CardDefinition = {
   name: 'The Shadow',
   tier: 1,
   arrows: [{ direction: 'N', color: 'blue' }],
-  effects: [{ type: 'pull', magnitude: 2, color: 'blue', trigger: 'onTargetAcquired' }],
+  effects: [{ type: 'pull', magnitude: 3, color: 'blue', trigger: 'onTargetAcquired' }],
 };
 
 // T2: Horizontal pull, scrubs rukas off targets on both sides
@@ -168,7 +172,7 @@ const p2Mediator: CardDefinition = {
     { direction: 'E', color: 'blue' },
     { direction: 'W', color: 'blue' },
   ],
-  effects: [{ type: 'pull', magnitude: 1, color: 'blue', trigger: 'onTargetAcquired' }],
+  effects: [{ type: 'pull', magnitude: 2, color: 'blue', trigger: 'onTargetAcquired' }],
 };
 
 // T2: Mixed — immediate push west, delayed pull east. Unfiltered, position matters.
@@ -181,7 +185,7 @@ const p2Mentor: CardDefinition = {
     { direction: 'E', color: 'blue' },
   ],
   effects: [
-    { type: 'push', magnitude: 2, color: 'red', trigger: 'onPlay' },
+    { type: 'push', magnitude: 3, color: 'red', trigger: 'onPlay' },
     { type: 'pull', magnitude: 2, color: 'blue', trigger: 'onTargetAcquired' },
   ],
 };
@@ -221,7 +225,7 @@ const p2Manager: CardDefinition = {
   ],
 };
 
-// T4: Landmine — onNeighbor push to enemies + immediate ally pull
+// T4: Wide diagonal landmine — onNeighbor tax on all four corners + ally pull
 const p2VP: CardDefinition = {
   id: 'p2-vp',
   name: 'The VP',
@@ -229,15 +233,17 @@ const p2VP: CardDefinition = {
   arrows: [
     { direction: 'NW', color: 'red' },
     { direction: 'NE', color: 'red' },
+    { direction: 'SW', color: 'red' },
+    { direction: 'SE', color: 'red' },
     { direction: 'S', color: 'blue' },
   ],
   effects: [
     {
-      type: 'push', magnitude: 2, color: 'red', trigger: 'onNeighbor',
+      type: 'push', magnitude: 1, color: 'red', trigger: 'onNeighbor',
       filter: { team: 'enemy' },
     },
     {
-      type: 'pull', magnitude: 3, color: 'blue', trigger: 'onPlay',
+      type: 'pull', magnitude: 2, color: 'blue', trigger: 'onPlay',
       filter: { team: 'ally' },
     },
   ],
@@ -249,7 +255,7 @@ const p2Clerk: CardDefinition = {
   name: 'The Clerk',
   tier: 1,
   arrows: [{ direction: 'S', color: 'blue' }],
-  effects: [{ type: 'pull', magnitude: 2, color: 'blue', trigger: 'onTargetAcquired' }],
+  effects: [{ type: 'pull', magnitude: 3, color: 'blue', trigger: 'onTargetAcquired' }],
 };
 
 // T2: Diagonal pull — reactive across opposite corners
@@ -261,7 +267,7 @@ const p2Analyst: CardDefinition = {
     { direction: 'NE', color: 'blue' },
     { direction: 'SW', color: 'blue' },
   ],
-  effects: [{ type: 'pull', magnitude: 2, color: 'blue', trigger: 'onTargetAcquired' }],
+  effects: [{ type: 'pull', magnitude: 3, color: 'blue', trigger: 'onTargetAcquired' }],
 };
 
 // T3: Persistent ally support — quietly cleans rukas off allies each round
@@ -273,10 +279,13 @@ const p2Coach: CardDefinition = {
     { direction: 'N', color: 'blue' },
     { direction: 'S', color: 'blue' },
   ],
-  effects: [{
-    type: 'pull', magnitude: 1, color: 'blue', trigger: 'eachTurn',
-    filter: { team: 'ally' },
-  }],
+  effects: [
+    {
+      type: 'pull', magnitude: 1, color: 'blue', trigger: 'eachTurn',
+      filter: { team: 'ally' },
+    },
+    { type: 'push', magnitude: 1, color: 'blue', trigger: 'eachTurn', target: 'self' },
+  ],
 };
 
 // --- Decks ---

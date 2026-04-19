@@ -13,9 +13,10 @@ const DIR_GRID_POS: Record<Direction, [number, number]> = {
   SW: [2, 0], S: [2, 1], SE: [2, 2],
 };
 
-function effectLabel(e: { type: string; magnitude: number; color: string; trigger: string; filter?: { team?: string } }): string {
+function effectLabel(e: { type: string; magnitude: number; color: string; trigger: string; filter?: { team?: string }; target?: string }): string {
   const parts: string[] = [];
   parts.push(e.type === 'push' ? `Push ${e.magnitude}` : `Pull ${e.magnitude}`);
+  if (e.target === 'self') parts.push('self');
   if (e.filter?.team) parts.push(e.filter.team);
   const triggerLabels: Record<string, string> = {
     onHit: 'on hit',

@@ -17,12 +17,15 @@ export interface Filter {
   team?: 'ally' | 'enemy';
 }
 
+export type EffectTarget = 'arrows' | 'self';
+
 export interface Effect {
   type: EffectType;
   magnitude: number;
   color: ArrowColor;
   trigger: Trigger;
   filter?: Filter;
+  target?: EffectTarget;
 }
 
 export interface CardDefinition {

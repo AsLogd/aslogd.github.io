@@ -128,3 +128,55 @@ Working Vite + TypeScript prototype at `localhost:5173` with:
 - **Additional effect primitives**: Drain (remove from self, give to target) and Siphon (take from target, add to self) are designed but not yet implemented. Siphon is intentionally bad (helps enemies, hurts self) — useful as a combo enabler with onHit.
 - **Status effects**: OOO, Inverse, Promote/Demote, Pip, Fired — all designed conceptually but not prototyped. These are tier 4-5 territory.
 - **Visual language / iconography**: As the card pool grows, card text will need compression into keywords and icons (like MTG keyword abilities).
+
+## Session 2 — Playtest Rebalance
+
+### Board and Hand Size
+
+- Grid expanded from 4x3 → 4x4 (16 cells, 8 rounds).
+- Hands grew from 7 → 10 cards per player; 2 go unused each match, introducing a small draft decision at the start of a game.
+- Three new cards per deck were added to fill the expanded hand (P1: Rookie, Enforcer, Director; P2: Clerk, Analyst, Coach).
+
+### Tier Shape as Silhouette, Not Rule
+
+The original tier rubric scaled power monotonically via `power = arrows × magnitude`. Initial play exposed two problems: T1/T2 cards felt too weak as finishers, and T4 single-target spikes were brittle against pull counterplay.
+
+Revised default shape:
+
+| Tier | Default arrows | Default magnitude |
+|------|----------------|-------------------|
+| T1   | 1              | 3 |
+| T2   | 2              | 2–3 |
+| T3   | 3              | 2 |
+| T4   | 4              | 1–2 |
+| T5   | 5–6            | 1 |
+
+Philosophy: T1/T2 become sharp hitters ("execute" pieces), T4/T5 become board-shapers whose value is coverage and trigger flexibility, not per-hit magnitude.
+
+**These are silhouettes, not constraints.** A card can break the pattern when it has a distinctive effect or trigger that earns the deviation — e.g. a T1 with 3 arrows at push 1 (harasser), or a T5 single-arrow execute at push 4. Tiers continue to gate effect *complexity* (effect count, filters, triggers, specials) via the original table; only the default arrows/magnitude curve is being relaxed.
+
+### `eachTurn` Self-Rukas Cost
+
+`eachTurn` carries a 1.5× reliability multiplier in the budget formula and is by far the strongest trigger per arrow. Rather than lowering magnitude further (which makes the effect feel invisible), cards with an `eachTurn` effect now gain rukas on themselves each round as an intrinsic cost.
+
+This turns persistence into a real timing decision: play a Scrum Master on round 1 and it pays 8 self-rukas over the game; play it round 6 and it pays only 3. The cost scales with remaining rounds, giving the player a meaningful knob.
+
+Implemented via a new optional `target: 'self'` on the Effect type. Self-targeted effects apply directly to the source card, skip arrow iteration, and intentionally do **not** chain `onHit` (the self-cost is a bookkeeping tax, not a "hit" for retaliation purposes).
+
+### Number Adjustments Applied This Session
+
+- **T1 push/pull bumped 2 → 3** across every T1 (6 cards).
+- **T2 magnitudes raised** where the card matched the default 2-arrow silhouette (Delegator 1→2, Hustler 2→3, Enforcer 2→3, Mediator 1→2, Mentor's push 2→3, Analyst 2→3).
+- **T3 unchanged** — the old sweet spot still hits target power.
+- **T4 reshapes:**
+  - Architect gains a W arrow (3 → 4 cardinals); `onTargetAcquired` push drops 2→1. `onHit` push 1 unchanged.
+  - VP gains SW + SE (now all four diagonals red); `onNeighbor` push 2→1, `onPlay` ally pull 3→2.
+- **`eachTurn` self-cost added:**
+  - Scrum Master: +1 self rukas each round.
+  - Coach: +1 self rukas each round.
+
+### Open Follow-ups
+
+- Visual affordance for self-cost: today it only shows in the effect label. A "+1/round" badge or a small dashed self-loop on the board would help preview pressure without inspecting each card.
+- T5 slot still empty — needs at least one per side to validate the "5–6 arrows at magnitude 1" silhouette and test the "execute" exception (e.g. T5 single-arrow push 4).
+- Draft decision with 2 unused cards is currently passive (just reveals after placement). Worth testing an explicit open-information draft phase to see if the deckbuilding-at-table feel adds tension or slows the game.
