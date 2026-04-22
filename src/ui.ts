@@ -41,6 +41,10 @@ export class Renderer {
   private svgOverlay: SVGSVGElement | null = null;
   private cellElements: Map<string, HTMLElement> = new Map();
 
+  // DOM references for score preview
+  private scoreP1El: HTMLElement | null = null;
+  private scoreP2El: HTMLElement | null = null;
+
   constructor(app: HTMLElement, state: GameState, onRestart: () => void) {
     this.app = app;
     this.state = state;
@@ -56,15 +60,19 @@ export class Renderer {
   }
 
   render() {
+    console.log('[render] start');
     this.app.innerHTML = '';
     this.cellElements.clear();
 
     this.app.appendChild(this.renderHeader());
+    console.log('[render] header done');
     this.app.appendChild(this.renderScoreboard());
+    console.log('[render] scoreboard done');
 
     const layout = document.createElement('div');
     layout.className = 'game-layout';
     layout.appendChild(this.renderHand('p1'));
+    console.log('[render] hand p1 done, about to renderBoard');
     layout.appendChild(this.renderBoard());
     layout.appendChild(this.renderHand('p2'));
     this.app.appendChild(layout);
@@ -107,6 +115,8 @@ export class Renderer {
       box.className = `score ${p}`;
       const label = p === 'p1' ? 'Player 1' : 'Player 2';
       box.innerHTML = `${label}: <span class="rukas">${scores[p]}</span> rukas`;
+      if (p === 'p1') this.scoreP1El = box;
+      else this.scoreP2El = box;
       div.appendChild(box);
     }
     return div;
@@ -182,6 +192,8 @@ export class Renderer {
 
     const board = document.createElement('div');
     board.className = 'board';
+
+    console.log('[renderBoard] ROWS:', ROWS, 'COLS:', COLS, 'board.length:', this.state.board.length, 'board[0].length:', this.state.board[0]?.length);
 
     for (let r = 0; r < ROWS; r++) {
       for (let c = 0; c < COLS; c++) {
@@ -306,8 +318,31 @@ export class Renderer {
       }
     });
 
+    // Compute and show preview scores
+    const currentScores = getScores(this.state);
+    const previewScores = { p1: currentScores.p1, p2: currentScores.p2 };
+    deltas.forEach((delta, key) => {
+      const [r, c] = key.split(',').map(Number);
+      const cell = this.state.board[r][c];
+      const owner: Player = cell ? cell.owner : this.state.currentPlayer;
+      previewScores[owner] += delta;
+    });
+    this.showScorePreview('p1', currentScores.p1, previewScores.p1);
+    this.showScorePreview('p2', currentScores.p2, previewScores.p2);
+
     // Draw SVG arrows for placement-specific effects
     this.drawHoverArrows(steps, pos);
+  }
+
+  private showScorePreview(player: Player, current: number, preview: number) {
+    const el = player === 'p1' ? this.scoreP1El : this.scoreP2El;
+    if (!el) return;
+    const label = player === 'p1' ? 'Player 1' : 'Player 2';
+    if (current === preview) return;
+    const diff = preview - current;
+    const cls = diff > 0 ? 'score-up' : 'score-down';
+    const sign = diff > 0 ? '+' : '';
+    el.innerHTML = `${label}: <span class="rukas dimmed">${current}</span> <span class="score-arrow">&rarr;</span> <span class="rukas ${cls}">${preview}</span> <span class="score-diff ${cls}">(${sign}${diff})</span> rukas`;
   }
 
   private drawArrowsToGroup(
@@ -464,6 +499,15 @@ export class Renderer {
       el.classList.remove('preview-active');
       el.querySelectorAll('.preview-delta').forEach(d => d.remove());
     });
+
+    // Restore scoreboard
+    const scores = getScores(this.state);
+    for (const p of ['p1', 'p2'] as Player[]) {
+      const el = p === 'p1' ? this.scoreP1El : this.scoreP2El;
+      if (!el) continue;
+      const label = p === 'p1' ? 'Player 1' : 'Player 2';
+      el.innerHTML = `${label}: <span class="rukas">${scores[p]}</span> rukas`;
+    }
 
     // Clear only hover arrows, keep persistent
     if (this.svgOverlay) {

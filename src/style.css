@@ -71,6 +71,37 @@ body {
   font-size: 22px;
 }
 
+.score .rukas.dimmed {
+  opacity: 0.4;
+}
+
+.score .rukas.score-up {
+  color: #e94560;
+}
+
+.score .rukas.score-down {
+  color: #66bb6a;
+}
+
+.score .score-arrow {
+  color: #888;
+  font-size: 16px;
+  margin: 0 2px;
+}
+
+.score .score-diff {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.score .score-diff.score-up {
+  color: #e94560;
+}
+
+.score .score-diff.score-down {
+  color: #66bb6a;
+}
+
 /* --- Game layout --- */
 
 .game-layout {

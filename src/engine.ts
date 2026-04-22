@@ -53,6 +53,7 @@ function resolveEffect(
   source: PlacedCard,
   effect: Effect,
   effectIdx: number,
+  onlyTargetPos?: Position,
 ) {
   if (effect.target === 'self') {
     let rukasChange = 0;
@@ -87,6 +88,9 @@ function resolveEffect(
     if (!targetPos) continue;
     const target = ctx.board[targetPos.row][targetPos.col];
     if (!target) continue;
+
+    // If restricted to a specific target, skip others
+    if (onlyTargetPos && (targetPos.row !== onlyTargetPos.row || targetPos.col !== onlyTargetPos.col)) continue;
 
     // Apply filter
     if (effect.filter?.team === 'ally' && target.owner !== source.owner) continue;
@@ -225,7 +229,7 @@ export function placeCard(
     const matchingColors = new Set(matchingArrows.map(a => a.color));
     adjCard.definition.effects.forEach((effect, i) => {
       if (effect.trigger === 'onTargetAcquired' && matchingColors.has(effect.color)) {
-        resolveEffect(ctx, adjCard, effect, i);
+        resolveEffect(ctx, adjCard, effect, i, pos);
       }
     });
   }

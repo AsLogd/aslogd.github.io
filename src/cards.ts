@@ -249,28 +249,31 @@ const p2VP: CardDefinition = {
   ],
 };
 
-// T1: South pull — scrubs rukas off cards below
-const p2Clerk: CardDefinition = {
-  id: 'p2-clerk',
-  name: 'The Clerk',
+// T1: North push — files rukas upward, gives P2 a second aggressive opener
+const p2Filer: CardDefinition = {
+  id: 'p2-filer',
+  name: 'The Filer',
   tier: 1,
-  arrows: [{ direction: 'S', color: 'blue' }],
-  effects: [{ type: 'pull', magnitude: 3, color: 'blue', trigger: 'onTargetAcquired' }],
+  arrows: [{ direction: 'N', color: 'red' }],
+  effects: [{ type: 'push', magnitude: 3, color: 'red', trigger: 'onTargetAcquired' }],
 };
 
-// T2: Diagonal pull — reactive across opposite corners
+// T2: Diagonal redirect — pulls from NE, pushes to SW. Position-dependent mixed threat.
 const p2Analyst: CardDefinition = {
   id: 'p2-analyst',
   name: 'The Analyst',
   tier: 2,
   arrows: [
     { direction: 'NE', color: 'blue' },
-    { direction: 'SW', color: 'blue' },
+    { direction: 'SW', color: 'red' },
   ],
-  effects: [{ type: 'pull', magnitude: 3, color: 'blue', trigger: 'onTargetAcquired' }],
+  effects: [
+    { type: 'pull', magnitude: 3, color: 'blue', trigger: 'onTargetAcquired' },
+    { type: 'push', magnitude: 2, color: 'red', trigger: 'onTargetAcquired' },
+  ],
 };
 
-// T3: Persistent ally support — quietly cleans rukas off allies each round
+// T3: Persistent aura — pulls allies, pushes enemies each round. Tactical Scrum Master.
 const p2Coach: CardDefinition = {
   id: 'p2-coach',
   name: 'The Coach',
@@ -278,13 +281,18 @@ const p2Coach: CardDefinition = {
   arrows: [
     { direction: 'N', color: 'blue' },
     { direction: 'S', color: 'blue' },
+    { direction: 'E', color: 'red' },
   ],
   effects: [
     {
       type: 'pull', magnitude: 1, color: 'blue', trigger: 'eachTurn',
       filter: { team: 'ally' },
     },
-    { type: 'push', magnitude: 1, color: 'blue', trigger: 'eachTurn', target: 'self' },
+    {
+      type: 'push', magnitude: 1, color: 'red', trigger: 'eachTurn',
+      filter: { team: 'enemy' },
+    },
+    { type: 'push', magnitude: 1, color: 'red', trigger: 'eachTurn', target: 'self' },
   ],
 };
 
@@ -296,6 +304,6 @@ export const PLAYER1_DECK: CardDefinition[] = [
 ];
 
 export const PLAYER2_DECK: CardDefinition[] = [
-  p2Intern, p2Shadow, p2Clerk, p2Mediator, p2Mentor, p2Analyst,
+  p2Intern, p2Shadow, p2Filer, p2Mediator, p2Mentor, p2Analyst,
   p2Firefighter, p2Manager, p2Coach, p2VP,
 ];
